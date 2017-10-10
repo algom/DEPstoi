@@ -1,0 +1,18 @@
+citHeader("To cite the DEPstoi package in publications use:")
+
+citEntry(entry="article",
+         title  = "Stoichiometry of chromatin-associated protein complexes revealed by label-free quantitative mass spectrometry-based proteomics",
+         author = personList(
+           person(given="Arne", family="Smits"),
+           person(given="Pascal", family="Jansen"),
+           person(given="Ina", family="Poser"),
+           person(given="Anthony", family="Hyman"),
+           person(given="Michiel", family="Vermeulen")),
+         journal = "Nucleic Acids Research",
+         year = "2013",
+         volume = "41",
+         pages = "e28",
+         textVersion = paste("Arne H. Smits, Pascal W.T.C. Jansen, Ina Poser, Anthony A. Hyman and Michiel Vermeulen.",
+           "Stoichiometry of chromatin-associated protein complexes revealed by label-free quantitative mass spectrometry-based proteomics.",
+           "Nucleic Acids Research, Volume 41, Pages e28.")
+         )
