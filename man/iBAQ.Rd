@@ -35,7 +35,7 @@ intensity-based absolute quantification (iBAQ)-based proteomics data.
 # load data and test for differentially enriched proteins
 data <- GFPip
 expdesign <- GFPip_ExpDesign
-results <- LFQ(data, expdesign, 'MinProb', 'WT', 'control',
+results <- LFQ(data, expdesign, 'MinProb', 'control', 'WT',
    filter = c('Reverse', 'Contaminant'), alpha = 0.05, lfc = 4.5)
 
 # load peptide data and perform iBAQ-based stoichiometry analysis

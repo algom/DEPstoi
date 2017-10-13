@@ -67,6 +67,7 @@ merge_ibaq <- function(proteins_unique, peptides) {
       mutate(Protein.group.IDs = split_sort_collapse(Protein.group.IDs)) %>%
       unique()
 
+    message("Obtain protein group ID matrix")
     # Expand the protein groups from a single column to a matrix
     max <- vapply(sorted_pep$Protein.group.IDs,
                   function(x) length(unlist(strsplit(x, ";"))),
@@ -76,10 +77,18 @@ merge_ibaq <- function(proteins_unique, peptides) {
                        paste0("X", 1:max),
                        sep = ";", fill = "right")
 
+    # Progress bar
+    message("Identify protein groups with overlapping peptides")
+    p <- progress_estimated(nrow(shared))
+
     # Combine all protein group IDs that have overlapping peptides
     # set first IDs group
     x <- list(shared[1, !is.na(shared[1, ])])
+
     for (i in 2:nrow(shared)) {
+    	# Progress
+    	p$tick()
+    	p$print()
       # get IDs of new row and check whether they match
       #with any of the previous IDs
       ids <- shared[i, !is.na(shared[i, ])]
@@ -117,6 +126,7 @@ merge_ibaq <- function(proteins_unique, peptides) {
         x[[(length(x) + 1)]] <- ids
       }
     }
+    p$print()
 
     # Function to convert the heterogenous list to a list of data.frames
     list2mat <- function(list) {
@@ -136,6 +146,7 @@ merge_ibaq <- function(proteins_unique, peptides) {
       lapply(as.data.frame) %>%
       bind_rows()
 
+    message("Merge iBAQ intensities for protein groups with overlapping peptides")
     columns <- grep("iBAQ.", colnames(proteins_unique))
     # Function to merge protein groups with shared peptides
     merge_sum <- function(rows) {
@@ -201,7 +212,7 @@ merge_ibaq <- function(proteins_unique, peptides) {
 #' se <- import_MaxQuant(proteins, exp_design,
 #'     filter = c("Reverse", "Contaminant"))
 #' processed <- process(se, fun = "MinProb")
-#' dep <- analyze_dep(processed, 'WT', 'control', lfc = 4.5)
+#' dep <- analyze_dep(processed, 'control', 'WT', lfc = 4.5)
 #'
 #' # Merge iBAQ intensities of proteins that have shared peptides
 #' ibaq <- merge_ibaq(data_unique, peptides)
@@ -228,25 +239,25 @@ get_stoichiometry <- function(dep, ibaq, contrast, bait, level = 1) {
 
     # Show error if inputs do not contain required columns
     if (any(!c("name", "ID") %in% colnames(row_data))) {
-        stop(paste0("'name' and/or 'ID' columns are not present in '",
-                    deparse(substitute(dep)), "'."),
+        stop("'name' and/or 'ID' columns are not present in '",
+        		 deparse(substitute(dep)), "'",
              call. = FALSE)
     }
     if (length(grep("_p.adj|_diff", colnames(row_data))) < 1) {
-        stop(paste0("'[contrast]_p.adj' and '[contrast]_diff' columns are not present in '",
-                    deparse(substitute(dep)),
-                    "'.\nRun test_diff() to obtain the required columns."),
+        stop("'[contrast]_p.adj' and '[contrast]_diff' columns are not present in '",
+        		 deparse(substitute(dep)),
+        		 "'\nRun test_diff() to obtain the required columns",
              call. = FALSE)
     }
     if (length(grep("_significant", colnames(row_data))) < 1) {
-        stop(paste0("[contrast]_significant' columns are not present in '",
-                    deparse(substitute(dep)),
-                    "'.\nRun get_rejections() to obtain the required columns."),
+        stop("[contrast]_significant' columns are not present in '",
+        		 deparse(substitute(dep)),
+        		 "'\nRun get_rejections() to obtain the required columns",
              call. = FALSE)
     }
     if (length(grep("iBAQ.", colnames(ibaq))) < 1) {
-        stop(paste0("'iBAQ' columns are not present in '",
-                    deparse(substitute(ibaq)), "'."),
+        stop("'iBAQ' columns are not present in '",
+        		 deparse(substitute(ibaq)), "'",
              call. = FALSE)
     }
     if (length(grep("name_", colnames(ibaq))) < 1) {
@@ -365,7 +376,7 @@ get_stoichiometry <- function(dep, ibaq, contrast, bait, level = 1) {
 #' se <- import_MaxQuant(proteins, exp_design,
 #'     filter = c("Reverse", "Contaminant"))
 #' processed <- process(se, fun = "MinProb")
-#' dep <- analyze_dep(processed, 'WT', 'control', lfc = 4.5)
+#' dep <- analyze_dep(processed, 'control', 'WT', lfc = 4.5)
 #'
 #' # Merge iBAQ intensities of proteins that have shared peptides
 #' ibaq <- merge_ibaq(data_unique, peptides)
@@ -452,7 +463,7 @@ plot_stoichiometry <- function(protein_stoichiometry, thr = 0.01, max_y = NULL) 
 #' se <- import_MaxQuant(proteins, exp_design,
 #'     filter = c("Reverse", "Contaminant"))
 #' processed <- process(se, fun = "MinProb")
-#' dep <- analyze_dep(processed, 'WT', 'control', lfc = 4.5)
+#' dep <- analyze_dep(processed, 'control', 'WT', lfc = 4.5)
 #'
 #' # Plot iBAQ vs LFQ plot
 #' plot_ibaq(dep, 'GFP_vs_WT', labelsize = 3)
@@ -587,7 +598,7 @@ plot_ibaq <- function(dep, contrast, labelsize = 3) {
 #' # load data and test for differentially enriched proteins
 #' data <- GFPip
 #' expdesign <- GFPip_ExpDesign
-#' results <- LFQ(data, expdesign, 'MinProb', 'WT', 'control',
+#' results <- LFQ(data, expdesign, 'MinProb', 'control', 'WT',
 #'    filter = c('Reverse', 'Contaminant'), alpha = 0.05, lfc = 4.5)
 #'
 #' # load peptide data and perform iBAQ-based stoichiometry analysis
@@ -615,23 +626,23 @@ iBAQ <- function(results, peptides, contrast, bait, level = 1) {
          call. = FALSE)
   }
   if(length(grep("iBAQ.", colnames(results$data))) < 1) {
-    stop(paste0("'iBAQ' columns are not present in '",
-                deparse(substitute(results)), "'."),
+    stop("'iBAQ' columns are not present in '",
+    		 deparse(substitute(results)), "'",
          call. = FALSE)
   }
   if(any(!c("Protein.group.IDs", "Unique..Groups.") %in% colnames(peptides))) {
-    stop(paste0("'Protein.group.IDs' and/or 'Unique..Groups.' columns are not present in '",
-                deparse(substitute(peptides)), "'."),
+    stop("'Protein.group.IDs' and/or 'Unique..Groups.' columns are not present in '",
+    		 deparse(substitute(peptides)), "'",
          call. = FALSE)
   }
   if(any(!c("name", "ID") %in% colnames(rowData(results$dep)))) {
-    stop(paste0("'name' and/or 'ID' columns are not present in '",
-                deparse(substitute(results)), "'."),
+    stop("'name' and/or 'ID' columns are not present in '",
+    		 deparse(substitute(results)), "'",
          call. = FALSE)
   }
   if(length(grep("_significant|_diff", colnames(rowData(results$dep)))) < 1) {
-    stop(paste0("'[contrast]_sign' and/or '[contrast]_diff' columns are not present in '",
-                deparse(substitute(results)), "'."),
+    stop("'[contrast]_sign' and/or '[contrast]_diff' columns are not present in '",
+    		 deparse(substitute(results)), "'",
          call. = FALSE)
   }
 

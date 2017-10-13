@@ -105,7 +105,7 @@ Subsequently, a volcano plot is generated to inspect the used cutoffs.
 ``` {r GFPip_DE, fig.width = 5, fig.height = 5}
 
 # Differential enrichment analysis
-data_diff <- test_diff(data_imp, control = "WT", type = "control")
+data_diff <- test_diff(data_imp, type = "control", control = "WT")
 
 # Call significant proteins based on user defined cutoffs
 dep <- add_rejections(data_diff, alpha = 0.05, lfc = 4.5)

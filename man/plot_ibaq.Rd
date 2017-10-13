@@ -33,7 +33,7 @@ exp_design <- GFPip_ExpDesign
 se <- import_MaxQuant(proteins, exp_design,
     filter = c("Reverse", "Contaminant"))
 processed <- process(se, fun = "MinProb")
-dep <- analyze_dep(processed, 'WT', 'control', lfc = 4.5)
+dep <- analyze_dep(processed, 'control', 'WT', lfc = 4.5)
 
 # Plot iBAQ vs LFQ plot
 plot_ibaq(dep, 'GFP_vs_WT', labelsize = 3)

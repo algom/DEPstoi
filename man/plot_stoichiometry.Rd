@@ -34,7 +34,7 @@ peptides <- GFPip_pep
 se <- import_MaxQuant(proteins, exp_design,
     filter = c("Reverse", "Contaminant"))
 processed <- process(se, fun = "MinProb")
-dep <- analyze_dep(processed, 'WT', 'control', lfc = 4.5)
+dep <- analyze_dep(processed, 'control', 'WT', lfc = 4.5)
 
 # Merge iBAQ intensities of proteins that have shared peptides
 ibaq <- merge_ibaq(data_unique, peptides)
