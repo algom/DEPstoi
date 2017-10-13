@@ -13,7 +13,7 @@ Description: This package provides the analysis workflow for stoichiometry
     analysis workflow. 
 License: Artistic-2.0
 Depends: R (>= 3.4),
-    DEP
+    DEP (>= 0.99.4)
 Encoding: UTF-8
 LazyData: true
 Imports: ggplot2, dplyr, purrr, readr, tibble, tidyr, ggrepel,
