@@ -17,7 +17,7 @@ Depends: R (>= 3.4),
 Encoding: UTF-8
 LazyData: true
 Imports: ggplot2, dplyr, purrr, readr, tibble, tidyr, ggrepel,
-    SummarizedExperiment, assertthat, stats
+    SummarizedExperiment, assertthat, stats, shiny, shinydashboard, DT
 RoxygenNote: 6.0.1
 Suggests: testthat,
     knitr,

@@ -12,6 +12,11 @@
 #' the package also contains wrapper functions that entail the complete
 #' analysis workflow and generate a report.
 #'
+#' @section Shiny apps:
+#' \itemize{
+#'   \item \code{\link{run_app}}: Shiny apps for interactive analysis.
+#' }
+#'
 #' @section Workflow functions:
 #' \itemize{
 #'   \item \code{\link{iBAQ}}:
@@ -44,6 +49,9 @@
 #' @name DEPstoi
 #'
 #' @import DEP ggplot2 dplyr SummarizedExperiment ggrepel
+#' @import shinydashboard
+#' @importFrom shiny runApp
+#' @importFrom DT dataTableOutput renderDataTable
 #' @importFrom assertthat assert_that
 #' @importFrom tidyr unite gather spread separate
 #' @importFrom tibble rownames_to_column column_to_rownames

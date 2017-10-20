@@ -662,3 +662,41 @@ iBAQ <- function(results, peptides, contrast, bait, level = 1) {
   return(stoi)
 }
 
+#' DEP and DEPmulti shiny apps
+#'
+#' \code{run_app} launches an interactive shiny app
+#' for interactive differential enrichment/expression analysis
+#' of proteomics data.
+#'
+#' @param app 'stoichiometry', The name of the app.
+#' @return Launches a browser with the shiny app
+#' @examples
+#' \dontrun{
+#' # Run the app
+#' run_app('stoichiometry')
+#'
+#' }
+#' @export
+run_app <- function(app) {
+	assertthat::assert_that(is.character(app),
+													length(app) == 1)
+
+	# Locate all the shiny apps that exist
+	valid_apps <- list.files(c(system.file("shiny_apps", package = "DEP"),
+														 system.file("shiny_apps", package = "DEPstoi")))
+
+	valid_apps_msg <- paste0("Valid apps are: '",
+													 paste(valid_apps, collapse = "', '"), "'")
+
+	# Show error if an unvalid app-name is given
+	if (!app %in% valid_apps) {
+		stop("Please run `run_app()` with a valid app as argument\n",
+				 valid_apps_msg, call. = FALSE)
+	}
+
+	# Launch the app
+	appDir <- c(system.file("shiny_apps", app, package = "DEP"),
+							system.file("shiny_apps", app, package = "DEPstoi"))
+	appDir <- appDir[appDir != ""]
+	suppressWarnings(runApp(appDir, display.mode = "normal"))
+}

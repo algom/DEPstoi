@@ -18,6 +18,13 @@ and visualization. For scientists with limited experience in R,
 the package also contains wrapper functions that entail the complete
 analysis workflow and generate a report.
 }
+\section{Shiny apps}{
+
+\itemize{
+  \item \code{\link{run_app}}: Shiny apps for interactive analysis.
+}
+}
+
 \section{Workflow functions}{
 
 \itemize{

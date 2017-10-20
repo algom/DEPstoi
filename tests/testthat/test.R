@@ -127,3 +127,9 @@ test_that("iBAQ returns a data.frame", {
   expect_is(iBAQ(test_result, test_pep, "GFP_vs_WT", "Rbbp4", level = 1L), "data.frame")
   expect_is(iBAQ(test_result, tibble::as_tibble(test_pep), "GFP_vs_WT", "Rbbp4", level = 1), "data.frame")
 })
+
+test_that("run_app throws error without valid input", {
+	expect_error(run_app("test"))
+})
+
+
