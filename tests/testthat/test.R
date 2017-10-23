@@ -114,11 +114,11 @@ test_that("iBAQ throws error without valid input", {
   expect_error(iBAQ(result_error, test_pep, "GFP_vs_WT", "Rbbp4"))
 
   result_error2 <- test_result
-  rowData(result_error2$dep) <- rowData(result_error2$dep)[,-(1)]
+  SummarizedExperiment::rowData(result_error2$dep) <- SummarizedExperiment::rowData(result_error2$dep)[,-(1)]
   expect_error(iBAQ(result_error2, test_pep, "GFP_vs_WT", "Rbbp4"))
 
   result_error3 <- test_result
-  rowData(result_error3$dep) <- rowData(result_error3$dep)[,-c(31,35)]
+  SummarizedExperiment::rowData(result_error3$dep) <- SummarizedExperiment::rowData(result_error3$dep)[,-c(31,35)]
   expect_error(iBAQ(result_error3, test_pep, "GFP_vs_WT", "Rbbp4"))
 })
 
