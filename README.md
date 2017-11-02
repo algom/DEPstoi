@@ -22,3 +22,5 @@ Install and load the package
 source("http://www.huber.embl.de/users/smits/install_DEPstoi.R")
 library("DEPstoi")
 ```
+
+More information can be found in the [vignette](http://www.huber.embl.de/users/smits/DEPstoi.html).
